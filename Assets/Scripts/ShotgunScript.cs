@@ -48,7 +48,8 @@ public class ShotgunScript : MonoBehaviour
 	}
 	void CreateBullet(Vector2 direction)
 	{
-		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.transform.position, Quaternion.identity);
+		float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.transform.position, Quaternion.Euler(0f, 0f, angle));
 		BulletScript bulletScript = bullet.GetComponent<BulletScript>();
 		bulletScript.player = player;
 		bulletScript.SetDirection(direction);

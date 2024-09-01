@@ -30,10 +30,6 @@ public class SceneController : MonoBehaviour
             }
         }
     }
-    public void PlayGame()
-    {
-        SceneManager.LoadScene(1, LoadSceneMode.Single);
-    }
     public void QuitGame()
     {
         Application.Quit();
@@ -42,4 +38,20 @@ public class SceneController : MonoBehaviour
     {
         AudioListener.volume = soundToggle.isOn ? 1.0f : 0.0f;
     }
+    public void OpenLevel1()
+    {
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
+    }
+	public void OpenLevel2()
+	{
+		SceneManager.LoadScene(2, LoadSceneMode.Single);
+	}
+	public void OpenLevel3()
+	{
+		SceneManager.LoadScene(3, LoadSceneMode.Single);
+	}
+	public void OpenLevel4()
+	{
+		SceneManager.LoadScene(4, LoadSceneMode.Single);
+	}
 }
