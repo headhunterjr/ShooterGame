@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponScript : MonoBehaviour
+public class ShotgunScript : MonoBehaviour
 {
 	public GameObject bulletPrefab;
 	public GameObject bulletSpawnPosition;
@@ -14,26 +14,27 @@ public class WeaponScript : MonoBehaviour
 	public GameObject player;
 	public int magazineCapacity;
 	public int reloadCost;
+	public float angleOffset;
 
 	private int maxMagazineCapacity;
 
 	// Start is called before the first frame update
 	void Start()
-    {
+	{
 		maxMagazineCapacity = magazineCapacity;
 	}
 
 	// Update is called once per frame
 	void Update()
-    {
+	{
 		ammoCounter.text = $"Ammo: {magazineCapacity}";
 		if (Input.GetMouseButtonDown(0))
 		{
 			if (magazineCapacity > 0)
 			{
-				Invoke("CreateBullet", 0.1f);
-				magazineCapacity--;
-				GetComponent<AudioSource>().PlayOneShot(gunshotSound, 0.1f);
+				Invoke("CreateBullets", 0.1f);
+				magazineCapacity -= 3;
+				GetComponent<AudioSource>().PlayOneShot(gunshotSound, 0.07f);
 			}
 			else
 			{
@@ -45,14 +46,25 @@ public class WeaponScript : MonoBehaviour
 			ReloadMagazine();
 		}
 	}
-	void CreateBullet()
+	void CreateBullet(Vector2 direction)
 	{
-		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		Vector2 direction = (mousePos - bulletSpawnPosition.transform.position).normalized;
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.transform.position, Quaternion.identity);
 		BulletScript bulletScript = bullet.GetComponent<BulletScript>();
 		bulletScript.player = player;
 		bulletScript.SetDirection(direction);
+	}
+	void CreateBullets()
+	{
+		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 direction = (mousePos - bulletSpawnPosition.transform.position).normalized;
+
+		CreateBullet(direction);
+
+		Vector2 directionUp = Quaternion.Euler(0, 0, angleOffset) * direction;
+		Vector2 directionDown = Quaternion.Euler(0, 0, -angleOffset) * direction;
+
+		CreateBullet(directionUp);
+		CreateBullet(directionDown);
 	}
 	void ReloadMagazine()
 	{

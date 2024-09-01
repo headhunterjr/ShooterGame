@@ -7,10 +7,11 @@ using UnityEngine;
 public class ZombieScript : MonoBehaviour
 {
 	public AudioClip zombieSound;
-    public float moveSpeed;
 	public float health;
 	public delegate void OnZombieDestroyed(object sender, EventArgs e);
 	public static event OnZombieDestroyed zombieDestroyed;
+	public float moveSpeed;
+	public int bulletsToKill;
 
 	private AudioSource audioSource;
 	private GameObject player;
@@ -62,7 +63,7 @@ public class ZombieScript : MonoBehaviour
 		if (collision.gameObject.tag == "Bullet")
 		{
 			Destroy(collision.gameObject);
-			health -= 50;
+			health -= 100 / bulletsToKill + 1;
 		}
 	}
 	public void OnBulletHit()

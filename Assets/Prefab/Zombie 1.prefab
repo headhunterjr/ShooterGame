@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5599609958082790423}
   - component: {fileID: 5150489128891077011}
   m_Layer: 0
-  m_Name: Zombie
+  m_Name: Zombie 1
   m_TagString: Zombie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,9 +174,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombieSound: {fileID: 8300000, guid: cb031b6804efae0458a21d716e40f7f1, type: 3}
-  moveSpeed: 0.01
   health: 100
-  healthDeductMessage: {fileID: 451014524274232083, guid: 6e794ef19b378fb4e9c4fb0e6e069630, type: 3}
+  moveSpeed: 0.01
+  bulletsToKill: 3
 --- !u!82 &5599609958082790423
 AudioSource:
   m_ObjectHideFlags: 0

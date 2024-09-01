@@ -13,8 +13,10 @@ public class PlayerScript : MonoBehaviour
 	public Transform groundCheck;
 	public LayerMask groundLayer;
 	public AudioClip jumpSound;
+	public GameObject bulletSpawnPoint;
 
 	private float weaponOffsetValue = 1f;
+	private float bulletSpawnPointOffsetValue = 3f;
 	private float collisionWithZombieTimer = 0f;
 	private bool isColliding = false;
 	private bool isGrounded;
@@ -107,8 +109,10 @@ public class PlayerScript : MonoBehaviour
 		}
 		float weaponOffset = sp.flipX ? -weaponOffsetValue : weaponOffsetValue;
 		weapon.transform.localPosition = new Vector2(weaponOffset, weapon.transform.localPosition.y);
-    }
-    void Jump()
+		float bulletSpawnPointOffset = sp.flipX ? -bulletSpawnPointOffsetValue : bulletSpawnPointOffsetValue;
+		bulletSpawnPoint.transform.localPosition = new Vector2(bulletSpawnPointOffset, bulletSpawnPoint.transform.localPosition.y);
+	}
+	void Jump()
     {
 		audioSource.PlayOneShot(jumpSound, 0.5f);
 		rb.velocity = Vector2.up * jumpForce;
@@ -171,5 +175,8 @@ public class PlayerScript : MonoBehaviour
 		}
 		float weaponOffset = sp.flipX ? -weaponOffsetValue : weaponOffsetValue;
 		weapon.transform.localPosition = new Vector2(weaponOffset, weapon.transform.localPosition.y);
+
+		float bulletSpawnPointOffset = sp.flipX ? -bulletSpawnPointOffsetValue : bulletSpawnPointOffsetValue;
+		bulletSpawnPoint.transform.localPosition = new Vector2(bulletSpawnPointOffset, bulletSpawnPoint.transform.localPosition.y);
 	}
 }

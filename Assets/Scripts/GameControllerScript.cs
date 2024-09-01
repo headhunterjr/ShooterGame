@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 using System.Linq;
 using System;
+using JetBrains.Annotations;
 
 public class GameControllerScript : MonoBehaviour
 {
@@ -14,22 +15,28 @@ public class GameControllerScript : MonoBehaviour
     public AudioClip winSound;
     public AudioClip gameOverSound;
     public TextMeshProUGUI zombieCounterText;
+    public TextMeshProUGUI coinCounterText;
+    public TextMeshProUGUI objectiveText;
     public GameObject zombie;
     public GameObject player;
+    public int zombieKillsRequired;
+    public int secondsToWin;
+    public float timeBetweenSpawns;
+    public TimerScript timer;
 
     private AudioSource audioSource;
     private GameObject[] walls;
     private GameObject[] zombies;
     private float startTime;
+    private bool gameEnded = false;
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        Time.timeScale = 1.0f;
+        //Time.timeScale = 1.0f;
         startTime = Time.time;
-        zombieCounterText.text = $"Kill Count: {CounterScript.zombieCounter}\nCoins: {CounterScript.coinCounter}";
-		walls = GameObject.FindGameObjectsWithTag("Wall");
-        InvokeRepeating("SpawnZombies", 1f, 3f);
+		walls = GameObject.FindGameObjectsWithTag("Wall").Where(o => o.activeSelf).ToArray();
+        InvokeRepeating("SpawnZombies", 1f, timeBetweenSpawns);
 
         ZombieScript.zombieDestroyed += OnBulletHit;
 	}
@@ -41,26 +48,47 @@ public class GameControllerScript : MonoBehaviour
     void Update()
     {
         float timePassed = Time.time - startTime;
-        zombieCounterText.text = $"Kill Count: {CounterScript.zombieCounter}\nCoins: {CounterScript.coinCounter}";
-        if (CounterScript.zombieCounter >= 30)
+        objectiveText.text = $"Objective: Kill {zombieKillsRequired} zombies in {secondsToWin} seconds";
+        zombieCounterText.text = $"Kill Count: {CounterScript.zombieCounter}";
+        coinCounterText.text = $"Coins: {CounterScript.coinCounter}";
+		zombies = GameObject.FindGameObjectsWithTag("Zombie");
+        if (!gameEnded)
         {
-            winText.SetActive(true);
-            audioSource.PlayOneShot(winSound, 0.07f);
-            Time.timeScale = 0f;
-			StartCoroutine(LoadMainMenu(4f));
-		}
-        if (player.IsDestroyed() || timePassed >= 30f)
-        {
-            audioSource.PlayOneShot(gameOverSound, 0.07f);
-            gameOverText.SetActive(true);
-            Time.timeScale = 0f;
-            StartCoroutine(LoadMainMenu(4f));
+			if (CounterScript.zombieCounter >= zombieKillsRequired)
+			{
+				gameEnded = true;
+				winText.SetActive(true);
+				audioSource.PlayOneShot(winSound, 0.25f);
+				foreach (GameObject z in zombies)
+				{
+					CounterScript.zombieCounter--;
+					CounterScript.coinCounter--;
+					Destroy(z);
+				}
+				timer.StopTimer();
+                CancelInvoke("SpawnZombies");
+				StartCoroutine(LoadMainMenu(4f));
+			}
+			if (player.IsDestroyed() || timePassed >= secondsToWin)
+			{
+				gameEnded = true;
+				gameOverText.SetActive(true);
+				audioSource.PlayOneShot(gameOverSound, 0.2f);
+				foreach (GameObject z in zombies)
+				{
+					CounterScript.zombieCounter--;
+					CounterScript.coinCounter--;
+					Destroy(z);
+				}
+				timer.StopTimer();
+				CancelInvoke("SpawnZombies");
+				StartCoroutine(LoadMainMenu(4f));
+			}
 		}
     }
     void SpawnZombies()
     {
-        zombies = GameObject.FindGameObjectsWithTag("Zombie");
-        if (zombies.Length < 10)
+		if (zombies.Length < 10)
         {
 			GameObject randomWall = walls[UnityEngine.Random.Range(0, walls.Length)];
 			Vector2 spawnPosition = randomWall.transform.position;

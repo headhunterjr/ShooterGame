@@ -5,10 +5,11 @@ using UnityEngine;
 public class BulletScript : MonoBehaviour
 {
 	public float bulletSpeed;
-	public GameObject weapon;
 	public float lifeTime;
 	public GameObject player;
 
+	private SpriteRenderer playerSpriteRenderer;
+	private SpriteRenderer spriteRenderer;
 	private Vector2 targetDirection;
 	private bool isMoving;
 	private float lifeTimer;
@@ -16,10 +17,9 @@ public class BulletScript : MonoBehaviour
 	{
 		lifeTimer = 0f;
 		isMoving = true;
-		Vector3 mousePosition = Input.mousePosition;
-		Vector2 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-		targetDirection = (worldMousePosition - (Vector2)transform.position).normalized;
+		playerSpriteRenderer = player.GetComponent<SpriteRenderer>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		Flip();
 	}
 	void Update()
 	{
@@ -47,5 +47,16 @@ public class BulletScript : MonoBehaviour
 	private void Awake()
 	{
 		Physics2D.IgnoreCollision(GetComponent<Collider2D>(), player.GetComponent<Collider2D>());
+	}
+	public void Flip()
+	{ 
+		if (playerSpriteRenderer.flipX)
+		{
+			spriteRenderer.flipX = true;
+		}
+	}
+	public void SetDirection(Vector2 direction)
+	{
+		targetDirection = direction;
 	}
 }
