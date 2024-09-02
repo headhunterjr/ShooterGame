@@ -291,9 +291,9 @@ MonoBehaviour:
   objectiveText: {fileID: 1783088416}
   zombie: {fileID: 8111862219186755403, guid: aa800a284d242b741869f745fe88cb65, type: 3}
   player: {fileID: 845295423}
-  zombieKillsRequired: 25
+  zombieKillsRequired: 30
   secondsToWin: 30
-  timeBetweenSpawns: 2.2
+  timeBetweenSpawns: 2
   timer: {fileID: 428764723}
 --- !u!4 &119372865
 Transform:

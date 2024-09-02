@@ -19,7 +19,6 @@ public class BulletScript : MonoBehaviour
 		isMoving = true;
 		playerSpriteRenderer = player.GetComponent<SpriteRenderer>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		Flip();
 	}
 	void Update()
 	{
@@ -48,15 +47,8 @@ public class BulletScript : MonoBehaviour
 	{
 		Physics2D.IgnoreCollision(GetComponent<Collider2D>(), player.GetComponent<Collider2D>());
 	}
-	public void Flip()
-	{ 
-		if (playerSpriteRenderer.flipX)
-		{
-			spriteRenderer.flipX = true;
-		}
-	}
 	public void SetDirection(Vector2 direction)
 	{
-		targetDirection = direction;
+		targetDirection = direction.normalized;
 	}
 }

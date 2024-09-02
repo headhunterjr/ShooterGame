@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using System.Linq;
 using System;
 using JetBrains.Annotations;
+using Assets.Scripts;
 
 public class GameControllerScript : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class GameControllerScript : MonoBehaviour
     private GameObject[] zombies;
     private float startTime;
     private bool gameEnded = false;
+    private int currentLevelIndex;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +41,7 @@ public class GameControllerScript : MonoBehaviour
         InvokeRepeating("SpawnZombies", 1f, timeBetweenSpawns);
 
         ZombieScript.zombieDestroyed += OnBulletHit;
+        currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
 	}
     private void OnBulletHit(object sender, EventArgs e)
     {
@@ -67,6 +70,7 @@ public class GameControllerScript : MonoBehaviour
 				}
 				timer.StopTimer();
                 CancelInvoke("SpawnZombies");
+                OnLevelComplete();
 				StartCoroutine(LoadMainMenu(4f));
 			}
 			if (player.IsDestroyed() || timePassed >= secondsToWin)
@@ -104,4 +108,8 @@ public class GameControllerScript : MonoBehaviour
         yield return new WaitForSecondsRealtime(time);
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
     }
+	void OnLevelComplete()
+	{
+        LevelProgression.CompleteLevel(currentLevelIndex);
+	}
 }

@@ -293,7 +293,7 @@ MonoBehaviour:
   player: {fileID: 845295423}
   zombieKillsRequired: 30
   secondsToWin: 30
-  timeBetweenSpawns: 2.5
+  timeBetweenSpawns: 2.2
   timer: {fileID: 428764723}
 --- !u!4 &119372865
 Transform:

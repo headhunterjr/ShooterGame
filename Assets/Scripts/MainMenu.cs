@@ -9,6 +9,7 @@ public class SceneController : MonoBehaviour
     public Toggle soundToggle;
     public AudioClip clickSound;
     public AudioClip menuMusic;
+    public Button[] levelButtons;
 
     private AudioSource audioSource;
     // Start is called before the first frame update
@@ -16,7 +17,8 @@ public class SceneController : MonoBehaviour
     {
         Time.timeScale = 1.0f;
 		audioSource = GetComponent<AudioSource>();
-        audioSource.PlayOneShot(menuMusic, 0.1f);
+        audioSource.PlayOneShot(menuMusic, 0.7f);
+		InitializeLevelButtons();
 	}
 
     // Update is called once per frame
@@ -26,7 +28,7 @@ public class SceneController : MonoBehaviour
         {
             if (audioSource != null)
             {
-                audioSource.PlayOneShot(clickSound, 1.5f);
+                audioSource.PlayOneShot(clickSound);
             }
         }
     }
@@ -38,20 +40,38 @@ public class SceneController : MonoBehaviour
     {
         AudioListener.volume = soundToggle.isOn ? 1.0f : 0.0f;
     }
-    public void OpenLevel1()
+    public void OpenLevel(int levelIndex)
     {
-        SceneManager.LoadScene(1, LoadSceneMode.Single);
+        if (IsLevelUnlocked(levelIndex))
+        {
+			SceneManager.LoadScene(levelIndex, LoadSceneMode.Single);
+		}
     }
-	public void OpenLevel2()
+	private void InitializeLevelButtons()
 	{
-		SceneManager.LoadScene(2, LoadSceneMode.Single);
+		int unlockedLevels = PlayerPrefs.GetInt("UnlockedLevels", 1);
+		for (int i = 0; i < levelButtons.Length; i++)
+		{
+			if (i + 1 <= unlockedLevels)
+			{
+				levelButtons[i].interactable = true;
+				levelButtons[i].onClick.AddListener(() => OpenLevel(i + 1));
+			}
+			else
+			{
+				levelButtons[i].interactable = false;
+                levelButtons[i].GetComponent<Image>().color = Color.red;
+			}
+		}
 	}
-	public void OpenLevel3()
+	private bool IsLevelUnlocked(int levelIndex)
 	{
-		SceneManager.LoadScene(3, LoadSceneMode.Single);
+		int unlockedLevels = PlayerPrefs.GetInt("UnlockedLevels", 1);
+		return levelIndex <= unlockedLevels;
 	}
-	public void OpenLevel4()
+	public void ResetProgress()
 	{
-		SceneManager.LoadScene(4, LoadSceneMode.Single);
+		PlayerPrefs.DeleteKey("UnlockedLevels");
+		InitializeLevelButtons();
 	}
 }

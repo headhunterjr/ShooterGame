@@ -293,7 +293,7 @@ MonoBehaviour:
   player: {fileID: 845295423}
   zombieKillsRequired: 60
   secondsToWin: 30
-  timeBetweenSpawns: 2
+  timeBetweenSpawns: 1.7
   timer: {fileID: 428764723}
 --- !u!4 &119372865
 Transform:
@@ -3217,6 +3217,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c9ef79ba59db38f40bd698e29162563d, type: 3}
+    - target: {fileID: 6123047727756517598, guid: 2c8e056cee8222e43b9d2312df63313a, type: 3}
+      propertyPath: bullet
+      value: 
+      objectReference: {fileID: 1339090264487077772, guid: 28e205cfc707e1846af82d204c40ed16, type: 3}
     - target: {fileID: 6123047727756517598, guid: 2c8e056cee8222e43b9d2312df63313a, type: 3}
       propertyPath: weapon
       value: 
